@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <!-- IKEv2 IPSec VPN profile for Apple devices, Pre-Shared Key(PSK), no username password.
+             References:
+             https://wiki.strongswan.org/projects/strongswan/wiki/AppleIKEv2Profile
+             https://developer.apple.com/library/mac/featuredarticles/iPhoneConfigurationProfileRef/Introduction/Introduction.html
+             https://help.apple.com/configurator
+             https://developer.apple.com/business/documentation/Configuration-Profile-Reference.pdf 
+             The extension of this file should be .mobileconfig -->
+        <!-- Set the name to whatever you like, it is used in the profile list on the device -->
+        <key>PayloadDisplayName</key>
+        <string>MightPowerIKEv2</string>
+        <key>PayloadDescription</key>
+        <string>IKEv2 IPSec VPN profile for Apple devices</string>
+        <key>PayloadOrganization</key>
+        <string>Self</string>
+        <key>ConsentText</key>
+        <dict>
+            <key>default</key>
+            <string>why join the navy if you can be a pirate</string>
+        </dict>
+        <!-- This is a reverse-DNS style unique identifier used to detect duplicate profiles -->
+        <key>PayloadIdentifier</key>
+        <string>com.mightpower.ikev2</string>
+        <!-- A globally unique identifier, use uuidgen on Linux/Mac OS X to generate it -->
+        <key>PayloadUUID</key>
+        <string>9f93912b-5fd2-4455-99fd-13b9a47b4581</string>
+        <key>PayloadType</key>
+        <string>Configuration</string>
+        <key>PayloadVersion</key>
+        <integer>1</integer>
+        <key>PayloadContent</key>
+        <array>
+            <!-- It is possible to add multiple VPN payloads with different identifiers/UUIDs and names -->
+            <dict>
+                <!-- This is an extension of the identifier given above -->
+                <key>PayloadIdentifier</key>
+                <string>com.mightpower.ikev2.config</string>
+                <!-- A globally unique identifier for this payload -->
+                <key>PayloadUUID</key>
+                <string>29e4456d-3f03-4f15-b46f-4225d89465b7</string>
+                <key>PayloadType</key>
+                <string>com.apple.vpn.managed</string>
+                <key>PayloadVersion</key>
+                <integer>1</integer>
+                <key>PayloadDescription</key>
+                <string>mightpower profile</string>
+                <key>PayloadDisplayName</key>
+                <string>MIGHTPOWER IKEv2</string>
+                <!-- This is the name of the VPN connection as seen in the VPN application later -->
+                <key>UserDefinedName</key>
+                <string>IKEv2</string>
+                <key>VPNType</key>
+                <string>IKEv2</string>
+                <key>IKEv2</key>
+                <dict>
+                    <!-- Hostname or IP address of the VPN server -->
+                    <key>RemoteAddress</key>
+                    <string>192.168.0.1</string>
+                    <!-- Remote identity, can be a FQDN, a userFQDN, an IP or (theoretically) a certificate's subject DN. Can't be empty.
+                         IMPORTANT: DNs are currently not handled correctly, they are always sent as identities of type FQDN -->
+                    <key>RemoteIdentifier</key>
+                    <string>might@puffy.net</string>
+                    <!-- Local IKE identity, same restrictions as above. If it is empty the client's IP address will be used -->
+                    <key>LocalIdentifier</key>
+                    <string>ios@puffy.net</string>
+                    <!-- Use a pre-shared secret for authentication -->
+                    <key>AuthenticationMethod</key>
+                    <string>SharedSecret</string>
+                    <!-- The actual secret -->
+                    <key>SharedSecret</key>
+                    <string>Your_Preshared_key</string>
+                    <!-- The client uses EAP to authenticate -->
+                    <key>ExtendedAuthEnabled</key>
+                    <integer>0</integer>
+                    <!-- User name for EAP authentication. Since iOS 9 this is optional, the user is prompted when the profile is installed -->
+                    <key>AuthName</key>
+                    <string></string>
+                    <!-- Optional password for EAP authentication, if it is not set the user is prompted when the profile is installed -->
+                    <key>AuthPassword</key>
+                    <string></string>
+                    <!-- Specifies whether to send all traffic through the VPN interface. If 1 all traffic is sent through over vpn. Default is 0 -->
+                    <key>IPv4</key>
+                    <dict>
+                    <key>OverridePrimary</key>
+                    <integer>1</integer>
+                    </dict>
+                    <!-- The next two dictionaries are optional (as are the keys in them), but it is recommended to specify them as the default is to use 3DES.
+                         IMPORTANT: Because only one proposal is sent (even if nothing is configured here) it must match the server configuration. -->
+                    <!-- Algorithms: https://wiki.strongswan.org/projects/strongswan/wiki/IKEv2CipherSuites -->
+                    <!-- Apple Reference: https://developer.apple.com/library/mac/featuredarticles/iPhoneConfigurationProfileRef/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010206-CH1-SW612 -->
+                    <!-- OpenBSD check iked.conf man page -->
+                    <key>IKESecurityAssociationParameters</key>
+                    <dict>
+                        <key>EncryptionAlgorithm</key>
+                        <string>AES-256</string>
+                        <key>IntegrityAlgorithm</key>
+                        <string>SHA2-256</string>
+                        <key>DiffieHellmanGroup</key>
+                        <integer>14</integer>
+                    </dict>
+                    <key>ChildSecurityAssociationParameters</key>
+                    <dict>
+                        <key>EncryptionAlgorithm</key>
+                        <string>AES-256</string>
+                        <key>IntegrityAlgorithm</key>
+                        <string>SHA2-256</string>
+                        <key>DiffieHellmanGroup</key>
+                        <integer>14</integer>
+                    </dict>
+                    <!-- Reference: https://developer.apple.com/library/mac/featuredarticles/iPhoneConfigurationProfileRef/Introduction/Introduction.html#//apple_ref/doc/uid/TP40010206-CH1-SW36 -->
+                    <key>OnDemandEnabled</key>
+                    <integer>1</integer>
+                    <key>OnDemandRules</key>
+                    <array>
+                        <dict>
+                            <key>Action</key>
+                            <string>Connect</string>
+                        </dict>
+                    </array>
+                </dict>
+            </dict>
+        </array>
+    </dict>
+</plist>
