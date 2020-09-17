@@ -1,0 +1,2 @@
+# OpenBSD
+OpenBSD related stuff
